@@ -22,10 +22,19 @@ def proof_of_work(last_proof):
 
     start = timer()
 
+    # this works to min but sometimes recives the following error
+    #
+    # raise JSONDecodeError("Expecting value", s, err.value) from None
+    # json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+    #
+    # this error happens BEFORE any print statments are called so this is
+    # likley an issue with the starter code
     print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
-
+    print(f'last proof was {last_proof}')
+    last_hash = hashlib.sha256(str(last_proof).encode()).hexdigest()
+    proof = 10000000
+    while valid_proof(last_hash, proof) is False:
+        proof += 2
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
@@ -38,9 +47,9 @@ def valid_proof(last_hash, proof):
 
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
+    hashed_proof = hashlib.sha256(str(proof).encode()).hexdigest()
+    return(last_hash[-6:] == hashed_proof[:6])
 
-    # TODO: Your code here!
-    pass
 
 
 if __name__ == '__main__':
